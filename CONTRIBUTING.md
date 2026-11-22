@@ -16,14 +16,21 @@ This adds a line like `Signed-off-by: Your Name <you@example.com>`.
 
 ## Development
 
+All development runs on GitHub Actions; no local machine is needed.
+
+- **CI** (`ci.yml`) runs on every push and pull request: repo hygiene check, ruff lint and format, pytest on Python 3.10–3.13, then builds and smoke-tests the wheel. It uses synthetic data only.
+- **Experiments** (`experiment.yml`) are started by hand from the Actions tab → *Experiment* → *Run workflow*. Pick the branch, the experiment and the datasets. The run downloads data from the original sources, runs `experiments/<name>.py`, uploads the results, and opens a PR with them into the branch you picked.
+
+To add an experiment: create `experiments/<name>.py` that accepts `--out DIR --datasets "a b"` and writes only `.json`, `.png` and `README.md` to `DIR`, then add `<name>` to the workflow's `experiment` options.
+
+If you do work locally, the same checks are:
+
 ```bash
 pip install -e ".[dev]"
 ruff check . && ruff format --check .
 pytest
 python scripts/check_repo_hygiene.py
 ```
-
-CI runs all of the above on every push and pull request (Python 3.10–3.13), then builds and smoke-tests the wheel.
 
 ## Branches and releases
 

@@ -16,10 +16,11 @@ Before using a dataset, run `bearing-datasets info <name>` and check the origina
 
 ## Rules this project follows
 
-1. **No raw or processed data is committed.** `.gitignore` blocks common data and model formats; CI uses synthetic data only.
-2. **No pretrained weights are distributed.** Models trained on non-commercial data could carry those restrictions, so users train locally.
-3. **Results only.** The repository may contain aggregate results (metrics, plots) derived from the datasets, with citations. It never contains the signals themselves.
-4. **"No licence stated" means "all rights reserved".** We download, use for research and cite; we never rehost.
-5. **Non-commercial means non-commercial.** If you use BearingShift commercially, use only datasets whose licences allow it, or your own data.
+1. **No raw or processed data is committed.** `.gitignore` and a CI check block common data and model formats; CI uses synthetic data only.
+2. **Data stays on the runner.** Experiments run on GitHub Actions: datasets are downloaded from their original sources during the run and kept between runs in this repository's Actions cache, which only this repository's workflows can read. Only results (JSON, PNG, Markdown) are uploaded as artifacts or committed, and the workflow fails if anything else appears in the results folder.
+3. **No pretrained weights are distributed.** Models trained on non-commercial data could carry those restrictions, so models are trained inside each run and discarded.
+4. **Results only.** The repository may contain aggregate results (metrics, plots) derived from the datasets, with citations. It never contains the signals themselves.
+5. **"No licence stated" means "all rights reserved".** We download, use for research and cite; we never rehost.
+6. **Non-commercial means non-commercial.** If you use BearingShift commercially, use only datasets whose licences allow it, or your own data.
 
 If you are a dataset author and want something here corrected or removed, please open an issue.
