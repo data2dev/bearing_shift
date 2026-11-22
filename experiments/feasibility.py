@@ -49,7 +49,17 @@ FALLBACK = {
 }
 XJTU_CONDITION_HZ = {"1": 35.0, "2": 37.5, "3": 40.0}
 
-TIME_COLS = ("timestamp", "datetime", "time", "elapsed_s", "life_s", "snapshot", "file_index")
+TIME_COLS = (
+    "time_s",
+    "timestamp",
+    "measured_at",
+    "datetime",
+    "time",
+    "elapsed_s",
+    "life_s",
+    "snapshot",
+    "file_index",
+)
 SPEED_HZ_COLS = ("shaft_hz", "speed_hz", "rotation_hz")
 SPEED_RPM_COLS = ("rpm", "speed_rpm", "shaft_rpm", "speed")
 AXIS_COLS = ("axis", "sensor_axis", "direction", "channel")
@@ -95,6 +105,55 @@ class BearingResult:
     departure: dict = field(default_factory=dict)  # indicator -> snapshot index or None
     departure_life_frac: dict = field(default_factory=dict)
     commissioning_snapshots: int = 0
+    failed: bool | None = None  # did this bearing fail at end of run? None = unknown
+    failure_mode: str = "unknown"
+
+
+def add_bearing_key(meta):
+    """Add `_bearing`, `_failed`, `_failure` columns identifying each physical bearing.
+
+    bearing-datasets has no universal bearing column for run-to-failure sets:
+      - XJTU-SY: one bearing per `run_id`; `failure` names the failed component.
+      - IMS: four bearings per `run_id`, identified by `channel` (bearing1_x, bearing3, ...);
+        `failed_bearing` lists which failed (e.g. "bearing_3+bearing_4").
+    """
+    cols = set(meta.columns)
+    meta = meta.copy()
+    if "bearing_id" in cols:
+        meta["_bearing"] = meta["bearing_id"].astype(str)
+    elif "run_id" in cols:
+        num = (
+            meta["channel"].astype(str).str.extract(r"bearing(\d+)", expand=False)
+            if "channel" in cols
+            else None
+        )
+        if num is not None and num.notna().any():
+            meta["_bearing"] = meta["run_id"].astype(str) + "_b" + num.fillna("?")
+            meta["_num"] = num
+        else:
+            meta["_bearing"] = meta["run_id"].astype(str)
+    else:
+        raise KeyError("metadata has neither 'bearing_id' nor 'run_id'")
+
+    failure = meta["failure"].astype(str) if "failure" in cols else None
+    if "failed_bearing" in cols and "_num" in meta:
+        failed = [
+            f"bearing_{n}" in str(fb).split("+")
+            for n, fb in zip(meta["_num"], meta["failed_bearing"], strict=True)
+        ]
+        meta["_failed"] = failed
+    elif "run_id" in cols and "_num" not in meta and failure is not None:
+        meta["_failed"] = True  # one bearing per run-to-failure record
+    else:
+        meta["_failed"] = None
+    if failure is not None:
+        meta["_failure"] = [
+            "survived" if (ok is not None and not ok) else f
+            for f, ok in zip(failure, meta["_failed"], strict=True)
+        ]
+    else:
+        meta["_failure"] = "unknown"
+    return meta
 
 
 def schema_summary(meta) -> dict:
@@ -134,7 +193,7 @@ def resolve_speed(dataset: str, rows, cols) -> tuple[float | None, str]:
     if fb.get("shaft_hz"):
         return fb["shaft_hz"], "fallback:published"
     if dataset == "xjtu_sy":
-        m = re.search(r"(\d)_\d", str(rows["bearing_id"].iloc[0]))
+        m = re.search(r"(\d)_\d", str(rows["_bearing"].iloc[0]))
         if m and m.group(1) in XJTU_CONDITION_HZ:
             return XJTU_CONDITION_HZ[m.group(1)], "fallback:condition-from-bearing-id"
     return None, "missing"
@@ -204,6 +263,8 @@ def analyse_bearing(ds, dataset: str, bearing_id, rows, cols) -> tuple[BearingRe
         bpfi_hz=bpfi_hz,
         sources={"order": order_src, "speed": speed_src, "bpfo": bpfo_src, "bpfi": bpfi_src},
         commissioning_snapshots=n_comm,
+        failed=None if rows["_failed"].iloc[0] is None else bool(rows["_failed"].iloc[0]),
+        failure_mode=str(rows["_failure"].iloc[0]),
     )
     for k, v in arrays.items():
         idx = None if np.isnan(v).all() else departure_index(v, n_comm)
@@ -234,7 +295,8 @@ def plot_dataset(dataset: str, results: list[BearingResult], curves: list[dict],
                 ax.axvline(life[idx], c=color, ls=":", lw=1)
         ax.axhline(K_SIGMA, c="k", ls="--", lw=0.8)
         ax.axvspan(0, life[res.commissioning_snapshots - 1], color="0.92")
-        ax.set_title(f"{res.bearing_id} (n={res.n_snapshots})", fontsize=9)
+        tag = {True: "failed", False: "survived", None: "?"}[res.failed]
+        ax.set_title(f"{res.bearing_id} ({tag}, n={res.n_snapshots})", fontsize=9)
         ax.set_xlabel("fraction of life", fontsize=8)
         ax.set_ylabel("z vs commissioning", fontsize=8)
         ax.tick_params(labelsize=7)
@@ -260,13 +322,14 @@ def run_dataset(dataset: str, out: Path) -> dict:
     schema = json.dumps(schema_summary(meta), indent=2)
     (out / f"{dataset}_schema.json").write_text(schema + "\n")
     print(f"::group::{dataset} metadata schema\n{schema}\n::endgroup::")
-    cols = list(meta.columns)
-    for required in ("signal_id", "recording_id", "bearing_id", "fs"):
-        if required not in cols:
+    for required in ("signal_id", "recording_id", "fs"):
+        if required not in meta.columns:
             raise KeyError(f"metadata has no '{required}' column; see {dataset}_schema.json")
+    meta = add_bearing_key(meta)
+    cols = list(meta.columns)
 
     results, curves = [], []
-    for bearing_id, rows in sorted(meta.groupby("bearing_id"), key=lambda kv: natural_key(kv[0])):
+    for bearing_id, rows in sorted(meta.groupby("_bearing"), key=lambda kv: natural_key(kv[0])):
         n_rec = rows["recording_id"].nunique()
         if n_rec < MIN_SNAPSHOTS:
             continue
@@ -288,7 +351,8 @@ def write_readme(out: Path, report: dict) -> None:
         "Cells show the fraction of life at first departure (— = never).",
         "",
         "**Gate:** BPFO/BPFI departs before end of life on the IMS outer-race bearing and on most "
-        "XJTU-SY bearings. Verdict is written by a human in this PR.",
+        "XJTU-SY bearings, while bearings that survived stay quiet. Verdict is written by a human "
+        "in this PR.",
         "",
     ]
     for dataset, rep in report.items():
@@ -297,16 +361,37 @@ def write_readme(out: Path, report: dict) -> None:
         if "error" in rep:
             lines += ["**Error:**", "", "```", rep["error"].strip()[-1500:], "```", ""]
             continue
+        bs = rep["bearings"]
+        failed = [b for b in bs if b["failed"]]
+        survived = [b for b in bs if b["failed"] is False]
+
+        def physics_departed(b):
+            return any(b["departure"][k] is not None for k in ("bpfo", "bpfi"))
+
         lines.append(
-            "| bearing | snapshots | BPFO | BPFI | RMS | kurtosis | speed / defect source |"
+            f"- Failed bearings with a BPFO or BPFI departure before end of life: "
+            f"**{sum(map(physics_departed, failed))} / {len(failed)}**"
         )
-        lines.append("|---|---|---|---|---|---|---|")
-        for b in rep["bearings"]:
+        if survived:
+            lines.append(
+                f"- Bearings that survived but still departed (false-alarm analogue): "
+                f"**{sum(map(physics_departed, survived))} / {len(survived)}**"
+            )
+        lines += [
+            "",
+            "| bearing | outcome | snapshots | BPFO | BPFI | RMS | kurtosis "
+            "| speed / defect source |",
+            "|---|---|---|---|---|---|---|---|",
+        ]
+        for b in bs:
             f = b["departure_life_frac"]
             cell = [("—" if f[k] is None else f"{f[k]:.2f}") for k in INDICATORS]
             src = f"{b['sources']['speed']} / {b['sources']['bpfo']}"
+            outcome = b["failure_mode"] if b["failed"] is not False else "survived"
             lines.append(
-                f"| {b['bearing_id']} | {b['n_snapshots']} | " + " | ".join(cell) + f" | {src} |"
+                f"| {b['bearing_id']} | {outcome} | {b['n_snapshots']} | "
+                + " | ".join(cell)
+                + f" | {src} |"
             )
         lines.append("")
         if rep.get("figure"):
