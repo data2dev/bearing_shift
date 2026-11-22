@@ -1,0 +1,262 @@
+{
+  "n_rows": 46480,
+  "columns": {
+    "dataset": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "ims"
+      ]
+    },
+    "signal_id": {
+      "dtype": "str",
+      "n_unique": 46480,
+      "examples": [
+        "test1_2003.10.22.12.06.24/bearing1_x",
+        "test1_2003.10.22.12.06.24/bearing1_y",
+        "test1_2003.10.22.12.06.24/bearing2_x"
+      ]
+    },
+    "recording_id": {
+      "dtype": "str",
+      "n_unique": 9464,
+      "examples": [
+        "test1_2003.10.22.12.06.24",
+        "test1_2003.10.22.12.06.24",
+        "test1_2003.10.22.12.06.24"
+      ]
+    },
+    "native_label": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "channel": {
+      "dtype": "str",
+      "n_unique": 12,
+      "values": [
+        "bearing1",
+        "bearing1_x",
+        "bearing1_y",
+        "bearing2",
+        "bearing2_x",
+        "bearing2_y",
+        "bearing3",
+        "bearing3_x",
+        "bearing3_y",
+        "bearing4",
+        "bearing4_x",
+        "bearing4_y"
+      ]
+    },
+    "sensor_location": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "test_bearing"
+      ]
+    },
+    "fs": {
+      "dtype": "int64",
+      "n_unique": 1,
+      "values": [
+        "20000"
+      ]
+    },
+    "n_samples": {
+      "dtype": "int64",
+      "n_unique": 1,
+      "values": [
+        "20480"
+      ]
+    },
+    "fault_type": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "fault_location": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "sensor_at_fault": {
+      "dtype": "bool",
+      "n_unique": 1,
+      "values": [
+        "False"
+      ]
+    },
+    "signal_file": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "part-float64.parquet"
+      ]
+    },
+    "signal_row_group": {
+      "dtype": "int64",
+      "n_unique": 894,
+      "examples": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "signal_row": {
+      "dtype": "int64",
+      "n_unique": 52,
+      "examples": [
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "quantity": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "acceleration"
+      ]
+    },
+    "unit": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "axis": {
+      "dtype": "str",
+      "n_unique": 3,
+      "values": [
+        "none",
+        "x",
+        "y"
+      ]
+    },
+    "sensor_mounting": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "pedestal"
+      ]
+    },
+    "speed_rpm": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "2000.0"
+      ]
+    },
+    "load": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "6000.0"
+      ]
+    },
+    "load_unit": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "lbs"
+      ]
+    },
+    "bearing_model": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "ZA-2115"
+      ]
+    },
+    "bpfo": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "7.0921"
+      ]
+    },
+    "bpfi": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "8.9079"
+      ]
+    },
+    "bsf": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "4.1975"
+      ]
+    },
+    "ftf": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "0.44326"
+      ]
+    },
+    "run_id": {
+      "dtype": "str",
+      "n_unique": 3,
+      "values": [
+        "test1",
+        "test2",
+        "test3"
+      ]
+    },
+    "time_s": {
+      "dtype": "float64",
+      "n_unique": 9461,
+      "examples": [
+        "0.0",
+        "0.0",
+        "0.0"
+      ]
+    },
+    "rul_s": {
+      "dtype": "float64",
+      "n_unique": 9074,
+      "examples": [
+        "2979212.0",
+        "2979212.0",
+        "2979212.0"
+      ]
+    },
+    "measured_at": {
+      "dtype": "str",
+      "n_unique": 9464,
+      "examples": [
+        "2003-10-22T12:06:24",
+        "2003-10-22T12:06:24",
+        "2003-10-22T12:06:24"
+      ]
+    },
+    "failed_bearing": {
+      "dtype": "str",
+      "n_unique": 3,
+      "values": [
+        "bearing_1",
+        "bearing_3",
+        "bearing_3+bearing_4"
+      ]
+    },
+    "failure": {
+      "dtype": "str",
+      "n_unique": 3,
+      "values": [
+        "bearing 1 outer race",
+        "bearing 3 inner race; bearing 4 roller element",
+        "bearing 3 outer race"
+      ]
+    }
+  }
+}
