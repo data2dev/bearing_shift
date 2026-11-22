@@ -74,6 +74,8 @@ jobs:
       - name: Download datasets from original sources
         if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
         run: |
+          # Some datasets ship as .7z / .rar inside zips; bsdtar (libarchive) extracts both.
+          sudo apt-get update -qq && sudo apt-get install -y -qq libarchive-tools
           mkdir -p "$BEARING_DATASETS_ROOT"
           # shellcheck disable=SC2086  # intentional word splitting of a validated list
           bearing-datasets build $DATASETS
