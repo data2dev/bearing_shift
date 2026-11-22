@@ -1,0 +1,832 @@
+{
+  "experiment": "feasibility",
+  "protocol": {
+    "commissioning_fraction": 0.2,
+    "min_commissioning": 10,
+    "k_sigma": 5.0,
+    "persist": 3,
+    "band_rel": 0.02
+  },
+  "datasets": {
+    "ims": {
+      "bearings": [
+        {
+          "dataset": "ims",
+          "bearing_id": "test1_b1",
+          "n_snapshots": 2156,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": null,
+            "bpfi": null,
+            "rms": 2147,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": null,
+            "bpfi": null,
+            "rms": 0.996,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 431,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test1_b2",
+          "n_snapshots": 2156,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 2124,
+            "bpfi": 2149,
+            "rms": 2119,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.986,
+            "bpfi": 0.997,
+            "rms": 0.983,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 431,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test1_b3",
+          "n_snapshots": 2156,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 2138,
+            "bpfi": 2014,
+            "rms": 2121,
+            "kurtosis": 1015
+          },
+          "departure_life_frac": {
+            "bpfo": 0.992,
+            "bpfi": 0.935,
+            "rms": 0.984,
+            "kurtosis": 0.471
+          },
+          "commissioning_snapshots": 431,
+          "failed": true,
+          "failure_mode": "bearing 3 inner race; bearing 4 roller element"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test1_b4",
+          "n_snapshots": 2156,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 2110,
+            "bpfi": 1642,
+            "rms": 1642,
+            "kurtosis": 1476
+          },
+          "departure_life_frac": {
+            "bpfo": 0.979,
+            "bpfi": 0.762,
+            "rms": 0.762,
+            "kurtosis": 0.685
+          },
+          "commissioning_snapshots": 431,
+          "failed": true,
+          "failure_mode": "bearing 3 inner race; bearing 4 roller element"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test2_b1",
+          "n_snapshots": 984,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 711,
+            "bpfi": 727,
+            "rms": 539,
+            "kurtosis": 701
+          },
+          "departure_life_frac": {
+            "bpfo": 0.723,
+            "bpfi": 0.74,
+            "rms": 0.548,
+            "kurtosis": 0.713
+          },
+          "commissioning_snapshots": 196,
+          "failed": true,
+          "failure_mode": "bearing 1 outer race"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test2_b2",
+          "n_snapshots": 984,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 974,
+            "bpfi": 938,
+            "rms": 832,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.991,
+            "bpfi": 0.954,
+            "rms": 0.846,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 196,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test2_b3",
+          "n_snapshots": 984,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": null,
+            "bpfi": 933,
+            "rms": 902,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": null,
+            "bpfi": 0.949,
+            "rms": 0.918,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 196,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test2_b4",
+          "n_snapshots": 984,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 972,
+            "bpfi": 964,
+            "rms": 703,
+            "kurtosis": 937
+          },
+          "departure_life_frac": {
+            "bpfo": 0.989,
+            "bpfi": 0.981,
+            "rms": 0.715,
+            "kurtosis": 0.953
+          },
+          "commissioning_snapshots": 196,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test3_b1",
+          "n_snapshots": 6324,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": null,
+            "bpfi": 6190,
+            "rms": 6199,
+            "kurtosis": 5969
+          },
+          "departure_life_frac": {
+            "bpfo": null,
+            "bpfi": 0.979,
+            "rms": 0.98,
+            "kurtosis": 0.944
+          },
+          "commissioning_snapshots": 1264,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test3_b2",
+          "n_snapshots": 6324,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 6316,
+            "bpfi": 6173,
+            "rms": 6164,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.999,
+            "bpfi": 0.976,
+            "rms": 0.975,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 1264,
+          "failed": false,
+          "failure_mode": "survived"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test3_b3",
+          "n_snapshots": 6324,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 6163,
+            "bpfi": 6185,
+            "rms": 5969,
+            "kurtosis": 6166
+          },
+          "departure_life_frac": {
+            "bpfo": 0.975,
+            "bpfi": 0.978,
+            "rms": 0.944,
+            "kurtosis": 0.975
+          },
+          "commissioning_snapshots": 1264,
+          "failed": true,
+          "failure_mode": "bearing 3 outer race"
+        },
+        {
+          "dataset": "ims",
+          "bearing_id": "test3_b4",
+          "n_snapshots": 6324,
+          "fs": 20000.0,
+          "shaft_hz": 33.333333333333336,
+          "bpfo_hz": 236.40333333333336,
+          "bpfi_hz": 296.93,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 6163,
+            "bpfi": 6198,
+            "rms": 2332,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.975,
+            "bpfi": 0.98,
+            "rms": 0.369,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 1264,
+          "failed": false,
+          "failure_mode": "survived"
+        }
+      ],
+      "figure": "ims_indicators.png"
+    },
+    "xjtu_sy": {
+      "bearings": [
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing1_1",
+          "n_snapshots": 123,
+          "fs": 25600.0,
+          "shaft_hz": 35.0,
+          "bpfo_hz": 107.90745000000001,
+          "bpfi_hz": 172.09255,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 75,
+            "bpfi": null,
+            "rms": 77,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.615,
+            "bpfi": null,
+            "rms": 0.631,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 24,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing1_2",
+          "n_snapshots": 161,
+          "fs": 25600.0,
+          "shaft_hz": 35.0,
+          "bpfo_hz": 107.90745000000001,
+          "bpfi_hz": 172.09255,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 39,
+            "bpfi": 69,
+            "rms": 39,
+            "kurtosis": 46
+          },
+          "departure_life_frac": {
+            "bpfo": 0.244,
+            "bpfi": 0.431,
+            "rms": 0.244,
+            "kurtosis": 0.287
+          },
+          "commissioning_snapshots": 32,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing1_3",
+          "n_snapshots": 158,
+          "fs": 25600.0,
+          "shaft_hz": 35.0,
+          "bpfo_hz": 107.90745000000001,
+          "bpfi_hz": 172.09255,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 70,
+            "bpfi": 128,
+            "rms": 64,
+            "kurtosis": 62
+          },
+          "departure_life_frac": {
+            "bpfo": 0.446,
+            "bpfi": 0.815,
+            "rms": 0.408,
+            "kurtosis": 0.395
+          },
+          "commissioning_snapshots": 31,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing1_4",
+          "n_snapshots": 122,
+          "fs": 25600.0,
+          "shaft_hz": 35.0,
+          "bpfo_hz": 107.90745000000001,
+          "bpfi_hz": 172.09255,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": null,
+            "bpfi": null,
+            "rms": null,
+            "kurtosis": 81
+          },
+          "departure_life_frac": {
+            "bpfo": null,
+            "bpfi": null,
+            "rms": null,
+            "kurtosis": 0.669
+          },
+          "commissioning_snapshots": 24,
+          "failed": true,
+          "failure_mode": "cage"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing1_5",
+          "n_snapshots": 52,
+          "fs": 25600.0,
+          "shaft_hz": 35.0,
+          "bpfo_hz": 107.90745000000001,
+          "bpfi_hz": 172.09255,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 40,
+            "bpfi": 41,
+            "rms": 33,
+            "kurtosis": 50
+          },
+          "departure_life_frac": {
+            "bpfo": 0.784,
+            "bpfi": 0.804,
+            "rms": 0.647,
+            "kurtosis": 0.98
+          },
+          "commissioning_snapshots": 10,
+          "failed": true,
+          "failure_mode": "inner race; outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing2_1",
+          "n_snapshots": 491,
+          "fs": 25600.0,
+          "shaft_hz": 37.5,
+          "bpfo_hz": 115.615125,
+          "bpfi_hz": 184.384875,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 467,
+            "bpfi": 456,
+            "rms": 454,
+            "kurtosis": 456
+          },
+          "departure_life_frac": {
+            "bpfo": 0.953,
+            "bpfi": 0.931,
+            "rms": 0.927,
+            "kurtosis": 0.931
+          },
+          "commissioning_snapshots": 98,
+          "failed": true,
+          "failure_mode": "inner race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing2_2",
+          "n_snapshots": 161,
+          "fs": 25600.0,
+          "shaft_hz": 37.5,
+          "bpfo_hz": 115.615125,
+          "bpfi_hz": 184.384875,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 48,
+            "bpfi": 53,
+            "rms": 48,
+            "kurtosis": 49
+          },
+          "departure_life_frac": {
+            "bpfo": 0.3,
+            "bpfi": 0.331,
+            "rms": 0.3,
+            "kurtosis": 0.306
+          },
+          "commissioning_snapshots": 32,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing2_3",
+          "n_snapshots": 533,
+          "fs": 25600.0,
+          "shaft_hz": 37.5,
+          "bpfo_hz": 115.615125,
+          "bpfi_hz": 184.384875,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 197,
+            "bpfi": 329,
+            "rms": 135,
+            "kurtosis": 129
+          },
+          "departure_life_frac": {
+            "bpfo": 0.37,
+            "bpfi": 0.618,
+            "rms": 0.254,
+            "kurtosis": 0.242
+          },
+          "commissioning_snapshots": 106,
+          "failed": true,
+          "failure_mode": "cage"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing2_4",
+          "n_snapshots": 42,
+          "fs": 25600.0,
+          "shaft_hz": 37.5,
+          "bpfo_hz": 115.615125,
+          "bpfi_hz": 184.384875,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 32,
+            "bpfi": 37,
+            "rms": 32,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.78,
+            "bpfi": 0.902,
+            "rms": 0.78,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 10,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing2_5",
+          "n_snapshots": 339,
+          "fs": 25600.0,
+          "shaft_hz": 37.5,
+          "bpfo_hz": 115.615125,
+          "bpfi_hz": 184.384875,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 177,
+            "bpfi": 243,
+            "rms": 147,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.524,
+            "bpfi": 0.719,
+            "rms": 0.435,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 67,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing3_1",
+          "n_snapshots": 2538,
+          "fs": 25600.0,
+          "shaft_hz": 40.0,
+          "bpfo_hz": 123.3228,
+          "bpfi_hz": 196.6772,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 2382,
+            "bpfi": 2485,
+            "rms": 2378,
+            "kurtosis": 2495
+          },
+          "departure_life_frac": {
+            "bpfo": 0.939,
+            "bpfi": 0.98,
+            "rms": 0.937,
+            "kurtosis": 0.983
+          },
+          "commissioning_snapshots": 507,
+          "failed": true,
+          "failure_mode": "outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing3_2",
+          "n_snapshots": 2496,
+          "fs": 25600.0,
+          "shaft_hz": 40.0,
+          "bpfo_hz": 123.3228,
+          "bpfi_hz": 196.6772,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 2220,
+            "bpfi": null,
+            "rms": 1665,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": 0.89,
+            "bpfi": null,
+            "rms": 0.667,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 499,
+          "failed": true,
+          "failure_mode": "inner race; rolling element; cage; outer race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing3_3",
+          "n_snapshots": 371,
+          "fs": 25600.0,
+          "shaft_hz": 40.0,
+          "bpfo_hz": 123.3228,
+          "bpfi_hz": 196.6772,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 346,
+            "bpfi": 346,
+            "rms": 343,
+            "kurtosis": 341
+          },
+          "departure_life_frac": {
+            "bpfo": 0.935,
+            "bpfi": 0.935,
+            "rms": 0.927,
+            "kurtosis": 0.922
+          },
+          "commissioning_snapshots": 74,
+          "failed": true,
+          "failure_mode": "inner race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing3_4",
+          "n_snapshots": 1515,
+          "fs": 25600.0,
+          "shaft_hz": 40.0,
+          "bpfo_hz": 123.3228,
+          "bpfi_hz": 196.6772,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": 1440,
+            "bpfi": 1420,
+            "rms": 1420,
+            "kurtosis": 1445
+          },
+          "departure_life_frac": {
+            "bpfo": 0.951,
+            "bpfi": 0.938,
+            "rms": 0.938,
+            "kurtosis": 0.954
+          },
+          "commissioning_snapshots": 303,
+          "failed": true,
+          "failure_mode": "inner race"
+        },
+        {
+          "dataset": "xjtu_sy",
+          "bearing_id": "Bearing3_5",
+          "n_snapshots": 114,
+          "fs": 25600.0,
+          "shaft_hz": 40.0,
+          "bpfo_hz": 123.3228,
+          "bpfi_hz": 196.6772,
+          "sources": {
+            "order": "metadata:time_s",
+            "speed": "metadata:speed_rpm",
+            "bpfo": "metadata:bpfo(order)",
+            "bpfi": "metadata:bpfi(order)"
+          },
+          "departure": {
+            "bpfo": null,
+            "bpfi": null,
+            "rms": null,
+            "kurtosis": null
+          },
+          "departure_life_frac": {
+            "bpfo": null,
+            "bpfi": null,
+            "rms": null,
+            "kurtosis": null
+          },
+          "commissioning_snapshots": 22,
+          "failed": true,
+          "failure_mode": "outer race"
+        }
+      ],
+      "figure": "xjtu_sy_indicators.png"
+    }
+  }
+}
