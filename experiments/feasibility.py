@@ -257,7 +257,9 @@ def run_dataset(dataset: str, out: Path) -> dict:
 
     ds = bd.open(dataset)
     meta = ds.metadata(backend="pandas")
-    (out / f"{dataset}_schema.json").write_text(json.dumps(schema_summary(meta), indent=2) + "\n")
+    schema = json.dumps(schema_summary(meta), indent=2)
+    (out / f"{dataset}_schema.json").write_text(schema + "\n")
+    print(f"::group::{dataset} metadata schema\n{schema}\n::endgroup::")
     cols = list(meta.columns)
     for required in ("signal_id", "recording_id", "bearing_id", "fs"):
         if required not in cols:

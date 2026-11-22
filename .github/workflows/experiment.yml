@@ -66,10 +66,10 @@ jobs:
       - name: Restore dataset cache
         if: inputs.datasets != ''
         id: data-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.BEARING_DATASETS_ROOT }}
-          key: bd-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}-${{ inputs.datasets }}-v1
+          key: bd-${{ runner.os }}-${{ inputs.datasets }}-v1
 
       - name: Download datasets from original sources
         if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
@@ -90,6 +90,14 @@ jobs:
             echo "::endgroup::"
           done
           du -sh "$BEARING_DATASETS_ROOT"
+
+      # Saved right after building, so a failing experiment doesn't force a re-download.
+      - name: Save dataset cache
+        if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.BEARING_DATASETS_ROOT }}
+          key: ${{ steps.data-cache.outputs.cache-primary-key }}
 
       - name: Log dataset licences and citations
         if: inputs.datasets != ''
@@ -112,7 +120,10 @@ jobs:
           } >> "$RESULTS_DIR/README.md"
 
       - name: Check results contain no data or weights
+        id: hygiene
+        if: always()
         run: |
+          [ -d "$RESULTS_DIR" ] || exit 0
           bad=$(find "$RESULTS_DIR" -type f ! \( -name '*.json' -o -name '*.png' -o -name '*.md' \) -print)
           big=$(find "$RESULTS_DIR" -type f -size +1M -print)
           if [ -n "$bad$big" ]; then
@@ -122,10 +133,14 @@ jobs:
       - name: Job summary
         run: cat "$RESULTS_DIR/README.md" >> "$GITHUB_STEP_SUMMARY"
 
+      # Uploaded even if the experiment failed, so partial output (e.g. schemas) isn't lost.
+      # The hygiene step above still has to pass for anything to be uploaded.
       - uses: actions/upload-artifact@v4
+        if: always() && steps.hygiene.outcome != 'failure'
         with:
           name: results-${{ inputs.experiment }}-${{ github.run_id }}
           path: ${{ env.RESULTS_DIR }}
+          if-no-files-found: ignore
           retention-days: 30
 
   results-pr:
