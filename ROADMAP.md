@@ -1,6 +1,8 @@
 # Roadmap
 
-Target: a solid v1 in about 6 weeks, CPU-only (GitHub Actions runners and Kaggle CPU), at no cost.
+Target: a solid v1 in about 6 weeks, at no cost. **Everything runs on GitHub Actions**: CI on every push, and experiments through the manual `Experiment` workflow, which downloads data from the original sources on the runner and returns only results. Nothing runs on a local PC.
+
+Runner budget per experiment job (free standard runner, public repo): 4 CPU, 16 GB RAM, ~14 GB disk, 6 h. Downloaded datasets are kept in the Actions cache (10 GB per repo) between runs. Anything that won't fit gets split across jobs, one dataset per job.
 
 Each phase ends with a **gate**: a concrete check that must pass before moving on. If a gate fails, we write down why and change course instead of pushing on.
 
@@ -10,10 +12,11 @@ Each phase ends with a **gate**: a concrete check that must pass before moving o
 
 **Question:** does a simple physics indicator visibly rise before failure on real run-to-failure data? If not, there is no ground truth to build a tool on.
 
-- [ ] Notebook: load IMS test 2 (outer-race failure on bearing 1) and 2–3 XJTU-SY bearings via `bearing-datasets`.
+- [x] Experiment workflow proven end to end on synthetic data (`experiments/smoke.py`).
+- [ ] `experiments/feasibility.py`: load IMS test 2 (outer-race failure on bearing 1) and 2–3 XJTU-SY bearings via `bearing-datasets`, run through the Experiment workflow.
 - [ ] Compute envelope-spectrum energy at BPFO / BPFI over each bearing's life.
 - [ ] Plot indicator vs. time to failure, one panel per bearing.
-- [ ] Write a one-paragraph verdict in the notebook.
+- [ ] Write a one-paragraph verdict in the results PR.
 
 **Gate:** the indicator departs from its early-life baseline before failure on at least the IMS bearing and most of the XJTU-SY bearings checked. If it does not, stop and reassess scope before writing any package code.
 

@@ -1,0 +1,142 @@
+name: Experiment
+
+# Manual-only. Runs one experiment script on a GitHub-hosted runner, downloading any
+# real datasets from their original sources. Only results (JSON, PNG, Markdown) leave the
+# runner: they are uploaded as an artifact and, optionally, proposed as a pull request
+# into the branch the workflow was started from. Raw data is never committed or uploaded.
+on:
+  workflow_dispatch:
+    inputs:
+      experiment:
+        description: "Experiment script in experiments/ (without .py)"
+        type: choice
+        options:
+          - smoke
+        default: smoke
+      datasets:
+        description: "Space-separated bearing-datasets names to build (empty for synthetic-only)"
+        type: string
+        default: ""
+      open_pr:
+        description: "Open a results PR into the branch this run was started from"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: experiment-${{ inputs.experiment }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  BEARING_DATASETS_ROOT: ${{ github.workspace }}/../bd-data
+  RESULTS_DIR: results/${{ inputs.experiment }}
+
+jobs:
+  run:
+    name: Run ${{ inputs.experiment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space (runner has ~14 GB by default)
+        if: inputs.datasets != ''
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h "$GITHUB_WORKSPACE"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - run: pip install -e ".[experiments]"
+
+      - name: Restore dataset cache
+        if: inputs.datasets != ''
+        id: data-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.BEARING_DATASETS_ROOT }}
+          key: bd-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}-${{ inputs.datasets }}-v1
+
+      - name: Download datasets from original sources
+        if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p "$BEARING_DATASETS_ROOT"
+          bearing-datasets build ${{ inputs.datasets }}
+          bearing-datasets clean-raw ${{ inputs.datasets }}
+          du -sh "$BEARING_DATASETS_ROOT"
+
+      - name: Log dataset licences and citations
+        if: inputs.datasets != ''
+        run: |
+          for d in ${{ inputs.datasets }}; do
+            echo "::group::$d"
+            bearing-datasets info "$d"
+            echo "::endgroup::"
+          done
+
+      - name: Run experiment
+        run: |
+          python "experiments/${{ inputs.experiment }}.py" --out "$RESULTS_DIR" --datasets "${{ inputs.datasets }}"
+          {
+            echo ""
+            echo "---"
+            echo "Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "Commit: ${GITHUB_SHA}"
+            echo "Datasets: ${{ inputs.datasets || 'none (synthetic)' }}"
+          } >> "$RESULTS_DIR/README.md"
+
+      - name: Check results contain no data or weights
+        run: |
+          bad=$(find "$RESULTS_DIR" -type f ! \( -name '*.json' -o -name '*.png' -o -name '*.md' \) -print)
+          big=$(find "$RESULTS_DIR" -type f -size +1M -print)
+          if [ -n "$bad$big" ]; then
+            echo "Disallowed or oversized files in results:"; echo "$bad"; echo "$big"; exit 1
+          fi
+
+      - name: Job summary
+        run: cat "$RESULTS_DIR/README.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ inputs.experiment }}-${{ github.run_id }}
+          path: ${{ env.RESULTS_DIR }}
+          retention-days: 30
+
+  results-pr:
+    name: Open results PR
+    needs: run
+    if: inputs.open_pr
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: results-${{ inputs.experiment }}-${{ github.run_id }}
+          path: ${{ env.RESULTS_DIR }}
+      - name: Commit results to a new branch and open a PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.ref_name }}
+          BRANCH: results/${{ inputs.experiment }}-${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add "$RESULTS_DIR"
+          if git diff --cached --quiet; then echo "No result changes."; exit 0; fi
+          git commit -m "Results: ${{ inputs.experiment }} (run ${{ github.run_id }})"
+          git push origin "$BRANCH"
+          gh pr create --base "$BASE" --head "$BRANCH" \
+            --title "Results: ${{ inputs.experiment }} (run ${{ github.run_id }})" \
+            --body-file "$RESULTS_DIR/README.md"
