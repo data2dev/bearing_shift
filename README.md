@@ -1,5 +1,8 @@
 # BearingShift
 
+[![CI](https://github.com/data2dev/bearing_shift/actions/workflows/ci.yml/badge.svg)](https://github.com/data2dev/bearing_shift/actions/workflows/ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 **Give it healthy vibration data from a machine. It tells you whether it would have warned you before the bearing failed, and how often it would have cried wolf.**
 
 > **Status: pre-alpha, under active development.** No results yet. Everything below describes the plan; sections marked *(planned)* do not exist yet. See [ROADMAP.md](ROADMAP.md).

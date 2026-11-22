@@ -14,6 +14,22 @@ git commit -s -m "Your message"
 
 This adds a line like `Signed-off-by: Your Name <you@example.com>`.
 
+## Development
+
+```bash
+pip install -e ".[dev]"
+ruff check . && ruff format --check .
+pytest
+python scripts/check_repo_hygiene.py
+```
+
+CI runs all of the above on every push and pull request (Python 3.10–3.13), then builds and smoke-tests the wheel.
+
+## Branches and releases
+
+- `main` is protected: no direct pushes. Work on a branch and open a pull request; CI must pass before merging.
+- Releases are cut by pushing a tag `vX.Y.Z` that matches `__version__` in `src/bearingshift/__init__.py`. The release workflow re-runs the checks, builds the package and creates a GitHub pre-release. Publishing to PyPI is off until explicitly enabled.
+
 ## Ground rules
 
 - **Never commit data.** No signals, no processed features from real datasets, no model weights. Use the synthetic generator for tests.

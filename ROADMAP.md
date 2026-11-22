@@ -19,12 +19,12 @@ Each phase ends with a **gate**: a concrete check that must pass before moving o
 
 ## Phase 1: Data layer and protocol (week 2)
 
-- [ ] Package skeleton: `src/bearingshift/`, `pyproject.toml`, `pytest`, `ruff`, GitHub Actions CI.
+- [x] Package skeleton: `src/bearingshift/`, `pyproject.toml`, `pytest`, `ruff`, GitHub Actions CI/CD.
 - [ ] Thin wrapper over `bearing-datasets`: run-to-failure datasets only, one record per bearing with sampling rate, speed, load and fault orders.
 - [ ] Windowing with a bearing ID attached to every window.
 - [ ] **Leakage test:** a CI test that fails if any bearing ID appears in both fit and evaluation sets.
 - [ ] Freeze the [evaluation protocol](#evaluation-protocol) below in code (config + docstrings) before any model is tuned.
-- [ ] Synthetic signal generator (healthy + injected impacts at BPFO) for tests and the demo. No real data in the repo or in CI.
+- [x] Synthetic signal generator (healthy + injected impacts at BPFO) for tests and the demo. No real data in the repo or in CI.
 
 **Gate:** CI runs green end-to-end on synthetic data in under 5 minutes; leakage test in place.
 
