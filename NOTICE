@@ -1,0 +1,12 @@
+BearingShift
+Copyright 2026 data2dev and BearingShift contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This repository contains source code only. It does not contain or
+redistribute any third-party datasets or model weights. Datasets used with
+this software are downloaded by the user from their original sources and
+remain subject to their own licences and terms of use. See DATA_LICENSES.md.
+
+This software is provided "AS IS", without warranties or conditions of any
+kind. It is not a safety system. See DISCLAIMER.md.
