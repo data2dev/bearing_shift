@@ -1,0 +1,257 @@
+{
+  "n_rows": 18432,
+  "columns": {
+    "dataset": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "xjtu_sy"
+      ]
+    },
+    "signal_id": {
+      "dtype": "str",
+      "n_unique": 18432,
+      "examples": [
+        "Bearing1_1_0001/horizontal",
+        "Bearing1_1_0001/vertical",
+        "Bearing1_1_0002/horizontal"
+      ]
+    },
+    "recording_id": {
+      "dtype": "str",
+      "n_unique": 9216,
+      "examples": [
+        "Bearing1_1_0001",
+        "Bearing1_1_0001",
+        "Bearing1_1_0002"
+      ]
+    },
+    "native_label": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "channel": {
+      "dtype": "str",
+      "n_unique": 2,
+      "values": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    "sensor_location": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "test_bearing"
+      ]
+    },
+    "fs": {
+      "dtype": "int64",
+      "n_unique": 1,
+      "values": [
+        "25600"
+      ]
+    },
+    "n_samples": {
+      "dtype": "int64",
+      "n_unique": 1,
+      "values": [
+        "32768"
+      ]
+    },
+    "fault_type": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "fault_location": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "unknown"
+      ]
+    },
+    "sensor_at_fault": {
+      "dtype": "bool",
+      "n_unique": 1,
+      "values": [
+        "False"
+      ]
+    },
+    "signal_file": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "part-float64.parquet"
+      ]
+    },
+    "signal_row_group": {
+      "dtype": "int64",
+      "n_unique": 576,
+      "examples": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "signal_row": {
+      "dtype": "int64",
+      "n_unique": 32,
+      "examples": [
+        "0",
+        "1",
+        "2"
+      ]
+    },
+    "quantity": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "acceleration"
+      ]
+    },
+    "unit": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "g"
+      ]
+    },
+    "axis": {
+      "dtype": "str",
+      "n_unique": 2,
+      "values": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    "sensor_mounting": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "pedestal"
+      ]
+    },
+    "speed_rpm": {
+      "dtype": "float64",
+      "n_unique": 3,
+      "values": [
+        "2100.0",
+        "2250.0",
+        "2400.0"
+      ]
+    },
+    "load": {
+      "dtype": "float64",
+      "n_unique": 3,
+      "values": [
+        "10.0",
+        "11.0",
+        "12.0"
+      ]
+    },
+    "load_unit": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "kN"
+      ]
+    },
+    "operating_condition": {
+      "dtype": "str",
+      "n_unique": 3,
+      "values": [
+        "35Hz12kN",
+        "37.5Hz11kN",
+        "40Hz10kN"
+      ]
+    },
+    "bearing_model": {
+      "dtype": "str",
+      "n_unique": 1,
+      "values": [
+        "UER204"
+      ]
+    },
+    "bpfo": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "3.08307"
+      ]
+    },
+    "bpfi": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "4.91693"
+      ]
+    },
+    "bsf": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "2.06657"
+      ]
+    },
+    "ftf": {
+      "dtype": "float64",
+      "n_unique": 1,
+      "values": [
+        "0.38538"
+      ]
+    },
+    "run_id": {
+      "dtype": "str",
+      "n_unique": 15,
+      "examples": [
+        "Bearing1_1",
+        "Bearing1_1",
+        "Bearing1_1"
+      ]
+    },
+    "time_s": {
+      "dtype": "float64",
+      "n_unique": 2538,
+      "examples": [
+        "0.0",
+        "0.0",
+        "60.0"
+      ]
+    },
+    "rul_s": {
+      "dtype": "float64",
+      "n_unique": 2538,
+      "examples": [
+        "7320.0",
+        "7320.0",
+        "7260.0"
+      ]
+    },
+    "failure": {
+      "dtype": "str",
+      "n_unique": 5,
+      "values": [
+        "cage",
+        "inner race",
+        "inner race; outer race",
+        "inner race; rolling element; cage; outer race",
+        "outer race"
+      ]
+    },
+    "snapshot": {
+      "dtype": "int64",
+      "n_unique": 2538,
+      "examples": [
+        "1",
+        "1",
+        "2"
+      ]
+    }
+  }
+}
