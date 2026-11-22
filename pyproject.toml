@@ -24,9 +24,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-data = ["bearing-datasets"]
+data = ["bearing-datasets", "pandas>=2.0"]
 experiments = ["bearing-datasets", "matplotlib>=3.7", "pandas>=2.0"]
 dev = [
+    "pandas>=2.0",
     "pytest>=8",
     "pytest-cov>=5",
     "ruff>=0.6",

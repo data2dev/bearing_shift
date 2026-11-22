@@ -27,9 +27,9 @@ Accuracy on a held-out split of labelled faults answers none of these.
 
 - **Trains on healthy data only.** Each machine's model is fitted on the first part of its life (the "commissioning window"). No fault labels are used for training.
 - **Evaluates on real run-to-failure data.** Bearings that were run until they actually failed (IMS, XJTU-SY, FEMTO/PRONOSTIA, Paderborn run-to-failure), plus one field dataset as a sanity check.
-- **Reports deployment metrics, not accuracy.** Detection lead time, false alarms per 1,000 operating hours and missed failures, per bearing, with confidence intervals.
+- **Reports deployment metrics, not accuracy.** Detection lead time, false alarms and missed failures, per machine, with confidence intervals.
 - **Makes ML beat physics.** Every learned model is compared against an envelope-spectrum health indicator at the bearing's defect frequencies (BPFO, BPFI, BSF), which is what a vibration analyst would check first.
-- **Splits by bearing, never by window.** No window from a test bearing is ever seen during fitting or threshold calibration.
+- **Splits by machine, never by window.** Models are fitted only on a machine's commissioning data, and every split goes through a leakage check that CI tests against deliberately leaky splits.
 - **Abstains when out of envelope.** If speed or load leaves the range seen during commissioning, the tool says "unknown" instead of guessing.
 
 ## Model ladder
@@ -50,8 +50,8 @@ The alarm logic matters as much as the model: thresholds calibrated on healthy d
 
 The full protocol is fixed in [ROADMAP.md](ROADMAP.md#evaluation-protocol) before any model is tuned.
 
-- **Unit of analysis:** the bearing. Results are reported per bearing and aggregated across bearings, never pooled across windows.
-- **Commissioning window:** the first *N* hours (or first *x*% of life) of each run, treated as healthy.
+- **Unit of analysis:** the machine (one run-to-failure record, with all its bearings). On a shared shaft a failing bearing shakes its neighbours, so alarms are machine-level. Results are reported per machine, never pooled across windows.
+- **Commissioning window:** a fixed amount of operating time from the start of each run (IMS 24 h, XJTU-SY 10 min), treated as healthy. Never a fraction of life, which would need the failure time in advance.
 - **Failure time:** the end of the run-to-failure record.
 - **Onset:** defined independently of any model under test (based on the envelope-spectrum indicator departing from its healthy baseline), so lead time isn't graded by the model being graded.
 - **Metrics:** lead time before failure, false alarms per 1,000 operating hours before onset, missed failures, and abstention rate.
@@ -65,9 +65,11 @@ bearingshift demo   # runs end-to-end on bundled synthetic data in ~2 minutes, n
 
 Real datasets are never bundled. They are downloaded from their original sources, by you, via [`bearing-datasets`](https://github.com/VictorBauler/BearingDatasets), and stay under their own licences.
 
-## Results *(planned)*
+## Results
 
-None yet. When they exist, this section will show the headline lead-time / false-alarm plot and a link to a **"Where it fails"** section listing bearings the method missed and false alarms it raised.
+**Phase 0 feasibility (passed).** A simple envelope-spectrum indicator departs from its healthy baseline before failure on all 4 failed IMS bearings and 13 of 15 XJTU-SY bearings. It also showed what the protocol must handle: neighbouring bearings on a shared shaft rise together, plain RMS is a strong baseline, and two XJTU-SY failures (a cage failure and an abrupt one) show no physics signature at all. Details: [`results/feasibility/`](results/feasibility/README.md) and [ROADMAP.md](ROADMAP.md#phase-0-findings-and-what-they-changed).
+
+Main results (lead time and false alarms per machine, against RMS and the physics baseline) come in Phase 4, with a **"Where it fails"** section listing every missed failure and false alarm.
 
 ## Data and licensing
 
