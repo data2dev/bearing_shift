@@ -74,12 +74,21 @@ jobs:
       - name: Download datasets from original sources
         if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
         run: |
-          # Some datasets ship as .7z / .rar inside zips; bsdtar (libarchive) extracts both.
-          sudo apt-get update -qq && sudo apt-get install -y -qq libarchive-tools
+          # Some datasets ship as .7z or multi-part .rar archives: bsdtar handles 7z,
+          # unrar handles multi-volume rar (e.g. XJTU-SY).
+          sudo apt-get update -qq && sudo apt-get install -y -qq libarchive-tools unrar
           mkdir -p "$BEARING_DATASETS_ROOT"
-          # shellcheck disable=SC2086  # intentional word splitting of a validated list
-          bearing-datasets build $DATASETS
-          bearing-datasets clean-raw $DATASETS
+          # Build each dataset separately: one failure shouldn't block the others.
+          # The experiment records any dataset that couldn't be opened.
+          for d in $DATASETS; do
+            echo "::group::build $d"
+            if bearing-datasets build "$d"; then
+              bearing-datasets clean-raw "$d"
+            else
+              echo "::warning::could not build dataset $d"
+            fi
+            echo "::endgroup::"
+          done
           du -sh "$BEARING_DATASETS_ROOT"
 
       - name: Log dataset licences and citations
