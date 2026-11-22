@@ -1,0 +1,58 @@
+# --- Data: never commit datasets (see DATA_LICENSES.md) ---
+data/
+datasets/
+raw/
+*.mat
+*.csv
+*.tdms
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.parquet
+*.feather
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+# Allow small, hand-written config/test fixtures explicitly if ever needed:
+!tests/fixtures/*.csv
+
+# --- Model weights / artefacts: never distribute ---
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.joblib
+*.safetensors
+models/
+checkpoints/
+runs/
+outputs/
+mlruns/
+wandb/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Notebooks / editors / OS ---
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
