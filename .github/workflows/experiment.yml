@@ -8,10 +8,8 @@ on:
   workflow_dispatch:
     inputs:
       experiment:
-        description: "Experiment script in experiments/ (without .py)"
-        type: choice
-        options:
-          - smoke
+        description: "Experiment script in experiments/ (without .py), e.g. smoke, feasibility"
+        type: string
         default: smoke
       datasets:
         description: "Space-separated bearing-datasets names to build (empty for synthetic-only)"
@@ -33,6 +31,9 @@ env:
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
   BEARING_DATASETS_ROOT: ${{ github.workspace }}/../bd-data
   RESULTS_DIR: results/${{ inputs.experiment }}
+  # Inputs are passed through env, never interpolated into shell, and validated below.
+  EXPERIMENT: ${{ inputs.experiment }}
+  DATASETS: ${{ inputs.datasets }}
 
 jobs:
   run:
@@ -41,6 +42,12 @@ jobs:
     timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate inputs
+        run: |
+          [[ "$EXPERIMENT" =~ ^[a-z0-9_]+$ ]] || { echo "invalid experiment name"; exit 1; }
+          [[ "$DATASETS" =~ ^[a-z0-9_\ ]*$ ]] || { echo "invalid datasets list"; exit 1; }
+          [ -f "experiments/$EXPERIMENT.py" ] || { echo "experiments/$EXPERIMENT.py not found"; exit 1; }
 
       - name: Free disk space (runner has ~14 GB by default)
         if: inputs.datasets != ''
@@ -59,23 +66,43 @@ jobs:
       - name: Restore dataset cache
         if: inputs.datasets != ''
         id: data-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.BEARING_DATASETS_ROOT }}
-          key: bd-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}-${{ inputs.datasets }}-v1
+          key: bd-${{ runner.os }}-${{ inputs.datasets }}-v1
 
       - name: Download datasets from original sources
         if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
         run: |
+          # Some datasets ship as .7z or multi-part .rar archives: bsdtar handles 7z,
+          # unrar handles multi-volume rar (e.g. XJTU-SY).
+          sudo apt-get update -qq && sudo apt-get install -y -qq libarchive-tools unrar
           mkdir -p "$BEARING_DATASETS_ROOT"
-          bearing-datasets build ${{ inputs.datasets }}
-          bearing-datasets clean-raw ${{ inputs.datasets }}
+          # Build each dataset separately: one failure shouldn't block the others.
+          # The experiment records any dataset that couldn't be opened.
+          for d in $DATASETS; do
+            echo "::group::build $d"
+            if bearing-datasets build "$d"; then
+              bearing-datasets clean-raw "$d"
+            else
+              echo "::warning::could not build dataset $d"
+            fi
+            echo "::endgroup::"
+          done
           du -sh "$BEARING_DATASETS_ROOT"
+
+      # Saved right after building, so a failing experiment doesn't force a re-download.
+      - name: Save dataset cache
+        if: inputs.datasets != '' && steps.data-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.BEARING_DATASETS_ROOT }}
+          key: ${{ steps.data-cache.outputs.cache-primary-key }}
 
       - name: Log dataset licences and citations
         if: inputs.datasets != ''
         run: |
-          for d in ${{ inputs.datasets }}; do
+          for d in $DATASETS; do
             echo "::group::$d"
             bearing-datasets info "$d"
             echo "::endgroup::"
@@ -83,17 +110,20 @@ jobs:
 
       - name: Run experiment
         run: |
-          python "experiments/${{ inputs.experiment }}.py" --out "$RESULTS_DIR" --datasets "${{ inputs.datasets }}"
+          python "experiments/$EXPERIMENT.py" --out "$RESULTS_DIR" --datasets "$DATASETS"
           {
             echo ""
             echo "---"
             echo "Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
             echo "Commit: ${GITHUB_SHA}"
-            echo "Datasets: ${{ inputs.datasets || 'none (synthetic)' }}"
+            echo "Datasets: ${DATASETS:-none (synthetic)}"
           } >> "$RESULTS_DIR/README.md"
 
       - name: Check results contain no data or weights
+        id: hygiene
+        if: always()
         run: |
+          [ -d "$RESULTS_DIR" ] || exit 0
           bad=$(find "$RESULTS_DIR" -type f ! \( -name '*.json' -o -name '*.png' -o -name '*.md' \) -print)
           big=$(find "$RESULTS_DIR" -type f -size +1M -print)
           if [ -n "$bad$big" ]; then
@@ -103,10 +133,14 @@ jobs:
       - name: Job summary
         run: cat "$RESULTS_DIR/README.md" >> "$GITHUB_STEP_SUMMARY"
 
+      # Uploaded even if the experiment failed, so partial output (e.g. schemas) isn't lost.
+      # The hygiene step above still has to pass for anything to be uploaded.
       - uses: actions/upload-artifact@v4
+        if: always() && steps.hygiene.outcome != 'failure'
         with:
           name: results-${{ inputs.experiment }}-${{ github.run_id }}
           path: ${{ env.RESULTS_DIR }}
+          if-no-files-found: ignore
           retention-days: 30
 
   results-pr:
@@ -135,8 +169,8 @@ jobs:
           git checkout -b "$BRANCH"
           git add "$RESULTS_DIR"
           if git diff --cached --quiet; then echo "No result changes."; exit 0; fi
-          git commit -m "Results: ${{ inputs.experiment }} (run ${{ github.run_id }})"
+          git commit -m "Results: $EXPERIMENT (run $GITHUB_RUN_ID)"
           git push origin "$BRANCH"
           gh pr create --base "$BASE" --head "$BRANCH" \
-            --title "Results: ${{ inputs.experiment }} (run ${{ github.run_id }})" \
+            --title "Results: $EXPERIMENT (run $GITHUB_RUN_ID)" \
             --body-file "$RESULTS_DIR/README.md"
